@@ -1,10 +1,5 @@
-import appointment_img from "./appointment_img.png";
-import header_img from "./header_img.png";
-import group_profiles from "./group_profiles.png";
-import profile_pic from "./profile_pic.png";
-import contact_image from "./contact_image.png";
-import about_image from "./about_image.png";
-import logo from "./logo.svg";
+import profile_pic from "./user-profile.webp";
+import logo from "./Rio-Logo.jpg";
 import dropdown_icon from "./dropdown_icon.svg";
 import menu_icon from "./menu_icon.svg";
 import cross_icon from "./cross_icon.png";
@@ -23,17 +18,12 @@ import coach5 from "./TBENCH.webp";
 import coach6 from "./MRheadshot.webp";
 
 export const assets = {
-  appointment_img,
-  header_img,
-  group_profiles,
   logo,
+  profile_pic,
   chats_icon,
   verified_icon,
   info_icon,
-  profile_pic,
   arrow_icon,
-  contact_image,
-  about_image,
   menu_icon,
   cross_icon,
   dropdown_icon,

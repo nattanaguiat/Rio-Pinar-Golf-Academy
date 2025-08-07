@@ -1,1 +1,15 @@
 @import "tailwindcss";
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: blue;
+}
+
+@theme {
+  --color-primary: #F4A460
+}
+
+.active hr {
+  @apply block
+}
