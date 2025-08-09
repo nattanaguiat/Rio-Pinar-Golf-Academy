@@ -16,9 +16,11 @@ import coach3 from "./PB.webp";
 import coach4 from "./MB.webp";
 import coach5 from "./TBENCH.webp";
 import coach6 from "./MRheadshot.webp";
-
+import bgImage from './Hole 3-Header-B:W.jpg'
+ 
 export const assets = {
   logo,
+  bgImage,
   profile_pic,
   chats_icon,
   verified_icon,

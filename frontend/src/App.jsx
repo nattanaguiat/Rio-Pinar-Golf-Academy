@@ -12,7 +12,7 @@ import Navbar from "./components/Navbar";
 function App() {
   return (
     <div className="mx-4 sm:mx[10%]">
-      <Navbar>
+      <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -23,7 +23,6 @@ function App() {
           <Route path="/my-bookings" element={<MyBookings />} />
           <Route path="/my-profile" element={<MyProfile />} />
         </Routes>
-      </Navbar>
     </div>
   );
 }
