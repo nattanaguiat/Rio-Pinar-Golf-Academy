@@ -8,21 +8,26 @@ import MyBookings from "./pages/MyBookings";
 import MyProfile from "./pages/MyProfile";
 import Booking from "./pages/Booking";
 import Navbar from "./components/Navbar";
+import RioJuniorGA from "./pages/JuniorAcademy";
+import JuniorAcademy from "./pages/JuniorAcademy";
+import Footer from "./components/Footer";
 
 function App() {
   return (
     <div className="mx-4 sm:mx[10%]">
       <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/coaches" element={<Coaches />} />
-          <Route path="/booking/:coachID" element={<Booking />} />
-          <Route path="/my-bookings" element={<MyBookings />} />
-          <Route path="/my-profile" element={<MyProfile />} />
-        </Routes>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/coaches" element={<Coaches />} />
+        <Route path="/booking/:coachID" element={<Booking />} />
+        <Route path="/my-bookings" element={<MyBookings />} />
+        <Route path="/my-profile" element={<MyProfile />} />
+        <Route path="/junior-academy" element={<JuniorAcademy />} />
+      </Routes>
+      <Footer />
     </div>
   );
 }

@@ -30,7 +30,7 @@ const Header = () => {
             className="text-white font-medium flex items-center gap-2 mt-4 justify-center"
           >
             <button className="bg-white/70 text-black px-6 py-2 rounded border font-medium hover:bg-gray-100 transition flex items-center gap-2 justify-center">
-              Book Now <img src={assets.arrow_icon} alt="arrow icon" />
+              Schedule Your Lesson Now <img src={assets.arrow_icon} alt="arrow icon" />
             </button>
           </Link>
         </div>
