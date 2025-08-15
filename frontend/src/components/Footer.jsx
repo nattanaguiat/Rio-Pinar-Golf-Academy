@@ -14,7 +14,7 @@ const Footer = () => {
         </div>
 
         <div>
-          <p className="tetx-xl text-gray-800 font-medium mb-5">CONTACT US</p>
+          <p className="tetx-xl text-gray-800 font-medium mb-5">GET IN TOUCH</p>
           <ul className="flex flex-col gap-3 text-gray-600">
             <li>Address: 8600 El Prado Avenue Orlando, FL 32825</li>
             <li>Phone: (407) 286-6920</li>

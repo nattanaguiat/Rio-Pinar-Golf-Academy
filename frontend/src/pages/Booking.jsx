@@ -11,8 +11,8 @@ const Booking = () => {
   const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
   const [coachInfo, setCoachInfo] = useState(null);
-  const [bookingSlots, setBookingSlots] = useState([]);
-  const [bookingIndex, setBookingIndex] = useState(0);
+  const [coachSlots, setCoachSlots] = useState([]);
+  const [slotIndex, setSlotIndex] = useState(0);
   const [slotTime, setSlotTime] = useState("");
 
   const fetchCoachInfo = async () => {
@@ -21,47 +21,55 @@ const Booking = () => {
   };
 
   const getAvailableSlots = async () => {
-    const slotsPerDay = [];
+    let slots = [];
     const today = new Date();
-  
+
     for (let i = 0; i < 7; i++) {
-      let currentDate = new Date(today);
+      const currentDate = new Date(today);
       currentDate.setDate(today.getDate() + i);
-  
+
       let startTime = new Date(currentDate);
-      let endTime = new Date(currentDate);
-      endTime.setHours(21, 0, 0, 0); // 9:00 PM
-  
+
       if (i === 0) {
-        // Día actual: empieza en la siguiente hora disponible o a las 10:00 AM
-        startTime.setHours(Math.max(currentDate.getHours() + 1, 10));
-        startTime.setMinutes(currentDate.getMinutes() > 30 ? 30 : 0);
+        // Para el día actual
+        const now = new Date();
+        const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
+
+        if (currentMinute > 30) {
+          startTime.setHours(currentHour + 1, 0, 0, 0);
+        } else {
+          startTime.setHours(currentHour, 30, 0, 0);
+        }
       } else {
-        startTime.setHours(10, 0, 0, 0); // 10:00 AM exacto
+        // Para los días siguientes
+        startTime.setHours(7, 0, 0, 0);
       }
-  
-      const timeSlots = [];
-  
-      while (startTime < endTime) {
-        const formattedTime = startTime.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit", // ✅ corregido
-        });
-  
+
+      const endTime = new Date(currentDate);
+      endTime.setHours(19, 0, 0, 0);
+
+      let timeSlots = [];
+      let currentTime = new Date(startTime);
+      while (currentTime < endTime) {
         timeSlots.push({
-          datetime: new Date(startTime),
-          time: formattedTime,
+          datetime: new Date(currentTime),
+          time: currentTime.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
         });
-  
-        startTime.setMinutes(startTime.getMinutes() + 30); // incrementa 30 minutos
+        currentTime.setMinutes(currentTime.getMinutes() + 60);
       }
-  
-      slotsPerDay.push(timeSlots);
+
+      // Almacenamos la información del día, incluso si no tiene turnos disponibles
+      slots.push({
+        date: new Date(currentDate),
+        timeSlots: timeSlots,
+      });
     }
-  
-    setBookingSlots(slotsPerDay);
+    setCoachSlots(slots);
   };
-  
 
   useEffect(() => {
     fetchCoachInfo();
@@ -72,8 +80,8 @@ const Booking = () => {
   }, [coachInfo]);
 
   useEffect(() => {
-    console.log(bookingSlots);
-  }, [bookingSlots]);
+    console.log(coachSlots);
+  }, [coachSlots]);
 
   return (
     coachInfo && (
@@ -122,23 +130,44 @@ const Booking = () => {
         <div className="sm:ml-72 sm:pl-4 mt-4 font-medium text-gray-700">
           <p>Booking Slots</p>
           <div className="flex gap-3 items-center w-full overflow-x-scroll mt-4">
-            {
-              bookingSlots.length && bookingSlots.map((item, index) => (
-                <div onClick={() => setBookingIndex(index)} className={`text-center py-6 min-w-16 rounded-full cursor-pointer ${bookingIndex === index ? 'bg-primary text-white' : 'border border-gray-600'}`} key={index}>
-                  <p>{item[0] && daysOfWeek[item[0].datetime.getDay()]}</p>
-                  <p>{item[0] && item[0].datetime.getDate()}</p>
+            {coachSlots.length &&
+              coachSlots.map((day, index) => (
+                <div
+                  onClick={() => setSlotIndex(index)}
+                  className={`text-center py-6 min-w-16 rounded-full cursor-pointer 
+                    ${
+                      slotIndex === index
+                        ? "bg-primary text-white font-semibold"
+                        : "border border-gray-200 text-gray-700 hover:bg-gray-100"
+                    }`}
+                  key={index}
+                >
+                  <p>{daysOfWeek[day.date.getDay()]}</p>
+                  <p>{day.date.getDate()}</p>
                 </div>
-              ))
-            }
+              ))}
           </div>
+          {/* Aquí está el cambio: se usa el slotIndex para mostrar las horas del día seleccionado */}
           <div className="flex items-center gap-3 w-full overflow-x-scroll mt-4">
-            {bookingSlots.length && bookingSlots[bookingIndex].map((item, index) => (
-              <p onClick={() => setSlotTime(item.time)} className={`text-sm font-light flex-shrink-0 px-5 py-2 rounded-full cursor-pointer ${item.time === slotTime ? 'bg-primary tesxt-white' : 'text-gray-400 border border-gray-300'}`} key={index}>
-                {item.time.toLowerCase()}
-              </p>
-            ))}
+            {coachSlots.length &&
+              coachSlots[slotIndex] &&
+              coachSlots[slotIndex].timeSlots.map((item, index) => (
+                <p
+                  onClick={() => setSlotTime(item.time)}
+                  key={index}
+                  className={`text-sm font-light flex-shrink-0 px-5 py-2 rounded-full cursor-pointer ${
+                    item.time === slotTime
+                      ? "bg-primary text-white"
+                      : "text-gray-400 border border-gray-300"
+                  }`}
+                >
+                  {item.time.toLowerCase()}
+                </p>
+              ))}
           </div>
-          <button className="bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6">Book a session</button>
+          <button className="bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6">
+            Book Session
+          </button>
         </div>
       </div>
     )

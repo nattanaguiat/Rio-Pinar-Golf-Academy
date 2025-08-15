@@ -19,6 +19,14 @@ import coach4 from "./MB.webp";
 import coach5 from "./TBENCH.webp";
 import coach6 from "./MRheadshot.webp";
 import bgImage from "./bG-Rio-Proyect.png";
+import about1 from "./about-1.png";
+import about2 from "./about-2.png";
+import about3 from "./about-3.png";
+import about4 from "./about-4.png";
+import about5 from "./about-5.png";
+import about6 from "./about-6.png";
+import about7 from "./about-7.png";
+import contactImg from "./rio-pinar-est.1957 2.png";
 
 export const assets = {
   logo,
@@ -36,6 +44,14 @@ export const assets = {
   razorpay_logo,
   golf_academy1,
   golf_academy2,
+  about1,
+  about2,
+  about3,
+  about4,
+  about5,
+  about6,
+  about7,
+  contactImg,
 };
 
 export const coaches = [
