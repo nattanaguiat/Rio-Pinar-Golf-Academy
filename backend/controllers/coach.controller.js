@@ -1,0 +1,1 @@
+import Coach from "../models/coach.model.js"
