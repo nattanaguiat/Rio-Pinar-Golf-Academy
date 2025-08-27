@@ -2,7 +2,7 @@ import validator from "validator";
 import bcrypt from "bcryptjs";
 import { v2 as cloudinary } from "cloudinary";
 import Coach from "../models/coach.model.js";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 
 const addCoach = async (req, res) => {
   try {
@@ -57,17 +57,32 @@ const addCoach = async (req, res) => {
 
 const loginAdmin = async (req, res) => {
   try {
-    const {email, password} = req.body
-    if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
-      const token = jwt.sign({email, password}, process.env.JWT_SECRET, {expiresIn: "7h"})
-      res.json({success: true, token})
+    const { email, password } = req.body;
+    if (
+      email === process.env.ADMIN_EMAIL &&
+      password === process.env.ADMIN_PASSWORD
+    ) {
+      const token = jwt.sign({ email, password }, process.env.JWT_SECRET, {
+        expiresIn: "7h",
+      });
+      res.json({ success: true, token });
     } else {
-      res.json({success: false, message: "Invalid credentials"})
+      res.json({ success: false, message: "Invalid credentials" });
     }
   } catch (error) {
     console.log(error);
     res.json({ success: false, messaage: error.messaage });
   }
-}
+};
 
-export { addCoach, loginAdmin };
+const allCoaches = async (req, res) => {
+  try {
+    const coaches = await Coach.find({}).select("-password");
+    res.json({ success: true, coaches });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, messaage: error.messaage });
+  }
+};
+
+export { addCoach, loginAdmin, allCoaches };

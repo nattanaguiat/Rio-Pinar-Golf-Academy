@@ -1,18 +1,42 @@
 import { createContext, useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-export const AdminContext = createContext()
+export const AdminContext = createContext();
 
-const AdminContextProvider = ({children} ) => {
+const AdminContextProvider = ({ children }) => {
+  const [aToken, setAToken] = useState(
+    localStorage.getItem("aToken") ? localStorage.getItem("aToken") : ""
+  );
 
-    const [aToken, setAToken] = useState(localStorage.getItem('aToken') ? localStorage.getItem('aToken') : '')
-    
-        const backendUrl = import.meta.env.VITE_BACKEND_URL
+  const [coaches, setCoaches] = useState([]);
 
-    return (
-        <AdminContext.Provider value={{aToken, setAToken, backendUrl}}>
-            {children}
-        </AdminContext.Provider>
-    )
-}
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-export default AdminContextProvider
+  const getAllCoaches = async () => {
+    try {
+      const { data } = await axios.post(
+        backendUrl + "/api/admin/all-coaches",
+        {},
+        { headers: { aToken } }
+      );
+
+      if (data.success) {
+        setCoaches(data.coaches);
+        console.log(data.coaches)
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  return (
+    <AdminContext.Provider value={{ aToken, setAToken, backendUrl, getAllCoaches, coaches, setCoaches }}>
+      {children}
+    </AdminContext.Provider>
+  );
+};
+
+export default AdminContextProvider;

@@ -2,8 +2,9 @@
 @import "tailwindcss";
 
 * {
-  font-family: Outfit;
+  font-family: "Outfit", sans-serif;
 }
+
 
 @theme {
   --color-primary: #f4a460;
@@ -13,8 +14,9 @@
   @apply block;
 }
 
-@media (max-width:740px) {
+@media (max-width: 740px) {
   .active p {
-    @apply text-white bg-primary
+   
+    @apply text-white bg-primary;
   }
 }
