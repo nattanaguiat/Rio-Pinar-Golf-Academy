@@ -1,4 +1,3 @@
-import { coaches } from "../../frontend/src/assets/assets.js";
 import Coach from "../models/coach.model.js";
 
 export const coachesList = async (req, res) => {
