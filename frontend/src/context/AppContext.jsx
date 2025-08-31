@@ -6,17 +6,37 @@ import { toast } from "react-toastify";
 export const AppContext = createContext();
 
 const AppContextProvider = ({ children }) => {
-  const [coaches, setCoaches] = useState([]);
-
   const currencySymbol = "$";
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+  const [coaches, setCoaches] = useState([]);
+  const [token, setToken] = useState(
+    localStorage.getItem("token") ? localStorage.getItem("token") : false
+  );
+
+  const [userData, setUserData] = useState(false);
 
   const getCoachesData = async () => {
     try {
-      const { data } = await axios.get(
-        "http://localhost:5001/api/coaches/list"
-      );
+      const { data } = await axios.get(backendUrl + "/api/coaches/list");
       if (data.success) {
         setCoaches(data.coaches);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
+  const loadUserPorfileData = async () => {
+    try {
+      const { data } = await axios.get(backendUrl + "/api/user/profile", {
+        headers: { token },
+      });
+      if (data.success) {
+        setUserData(data.userData);
       } else {
         toast.error(data.message);
       }
@@ -30,8 +50,27 @@ const AppContextProvider = ({ children }) => {
     getCoachesData();
   }, []);
 
+  useEffect(() => {
+    if (token) {
+      loadUserPorfileData();
+    } else {
+      setUserData(false);
+    }
+  }, [token]);
+
   return (
-    <AppContext.Provider value={{ coaches, currencySymbol }}>
+    <AppContext.Provider
+      value={{
+        coaches,
+        backendUrl,
+        currencySymbol,
+        token,
+        setToken,
+        userData,
+        setUserData,
+        loadUserPorfileData,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );
