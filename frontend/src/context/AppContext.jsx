@@ -30,7 +30,7 @@ const AppContextProvider = ({ children }) => {
     }
   };
 
-  const loadUserPorfileData = async () => {
+  const loadUserProfileData = async () => {
     try {
       const { data } = await axios.get(backendUrl + "/api/user/profile", {
         headers: { token },
@@ -52,7 +52,7 @@ const AppContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (token) {
-      loadUserPorfileData();
+      loadUserProfileData();
     } else {
       setUserData(false);
     }
@@ -61,14 +61,14 @@ const AppContextProvider = ({ children }) => {
   return (
     <AppContext.Provider
       value={{
-        coaches,
+        coaches, getCoachesData,
         backendUrl,
         currencySymbol,
         token,
         setToken,
         userData,
         setUserData,
-        loadUserPorfileData,
+        loadUserProfileData,
       }}
     >
       {children}

@@ -1,14 +1,19 @@
 import { useEffect, useContext, useState } from "react";
 import { AppContext } from "../context/AppContext";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { GiGolfTee } from "react-icons/gi";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const Booking = () => {
-  const { coachID } = useParams();
-  const { coaches, currencySymbol } = useContext(AppContext);
+  const { coachId } = useParams();
+  const { coaches, currencySymbol, backendUrl, token, getCoachesData } =
+    useContext(AppContext);
 
   const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+
+  const navigate = useNavigate();
 
   const [coachInfo, setCoachInfo] = useState(null);
   const [coachSlots, setCoachSlots] = useState([]);
@@ -16,11 +21,13 @@ const Booking = () => {
   const [slotTime, setSlotTime] = useState("");
 
   const fetchCoachInfo = async () => {
-    const coachInfo = coaches.find((coach) => coach._id === coachID);
+    const coachInfo = coaches.find((coach) => coach._id === coachId);
     setCoachInfo(coachInfo);
   };
 
   const getAvailableSlots = async () => {
+    if (!coachInfo) return;
+
     let slots = [];
     const today = new Date();
 
@@ -31,7 +38,6 @@ const Booking = () => {
       let startTime = new Date(currentDate);
 
       if (i === 0) {
-        // Para el día actual
         const now = new Date();
         const currentHour = now.getHours();
         const currentMinute = now.getMinutes();
@@ -42,7 +48,6 @@ const Booking = () => {
           startTime.setHours(currentHour, 30, 0, 0);
         }
       } else {
-        // Para los días siguientes
         startTime.setHours(7, 0, 0, 0);
       }
 
@@ -51,29 +56,83 @@ const Booking = () => {
 
       let timeSlots = [];
       let currentTime = new Date(startTime);
+
+      let day = currentDate.getDate();
+      let month = currentDate.getMonth() + 1;
+      let year = currentDate.getFullYear();
+      const slotDate = `${day}_${month}_${year}`;
+
       while (currentTime < endTime) {
-        timeSlots.push({
-          datetime: new Date(currentTime),
-          time: currentTime.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
+        const formattedTime = currentTime.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
         });
+
+        // Verificar si el slot ya está reservado
+        const isBooked =
+          coachInfo.slots_booked?.[slotDate]?.includes(formattedTime);
+
+        if (!isBooked) {
+          timeSlots.push({
+            datetime: new Date(currentTime),
+            time: formattedTime,
+          });
+        }
+
         currentTime.setMinutes(currentTime.getMinutes() + 60);
       }
 
-      // Almacenamos la información del día, incluso si no tiene turnos disponibles
-      slots.push({
-        date: new Date(currentDate),
-        timeSlots: timeSlots,
-      });
+      if (timeSlots.length > 0) {
+        slots.push({
+          date: new Date(currentDate),
+          timeSlots,
+        });
+      }
     }
+
     setCoachSlots(slots);
+  };
+
+  const bookSession = async () => {
+    if (!token) {
+      toast.warn("Login to book appointment");
+      return navigate("/login");
+    }
+
+    try {
+      const date = coachSlots[slotIndex].date;
+      let day = date.getDate();
+      let month = date.getMonth() + 1;
+      let year = date.getFullYear();
+
+      const slotDate = `${day}_${month}_${year}`;
+
+      const { data } = await axios.post(
+        backendUrl + "/api/user/book-session",
+        {
+          coachId,
+          slotDate,
+          slotTime,
+        },
+        { headers: { token } }
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+        getCoachesData();
+        navigate("/my-bookings");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
   };
 
   useEffect(() => {
     fetchCoachInfo();
-  }, [coaches, coachID]);
+  }, [coaches, coachId]);
 
   useEffect(() => {
     getAvailableSlots();
@@ -87,7 +146,6 @@ const Booking = () => {
     coachInfo && (
       <div className="p-4 sm:p-6 md:p-8">
         <div className="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
-          {/* Imagen del coach */}
           <div className="w-full sm:w-72 flex-shrink-0">
             <img
               className="w-full rounded-lg object-cover aspect-[4/5] bg-primary"
@@ -96,9 +154,7 @@ const Booking = () => {
             />
           </div>
 
-          {/* Información del coach */}
           <div className="flex-1 border border-gray-300 rounded-lg p-6 bg-white shadow-sm">
-            {/* Nombre y título */}
             <p className="flex items-center gap-2 text-xl sm:text-2xl font-semibold text-gray-900">
               {coachInfo.name} <GiGolfTee className="text-primary" />
             </p>
@@ -107,7 +163,6 @@ const Booking = () => {
               <p>{coachInfo.subtitle}</p>
             </div>
 
-            {/* Sección "About" */}
             <div className="mt-4">
               <p className="flex items-center gap-1 text-sm font-medium text-gray-900">
                 About{" "}
@@ -147,7 +202,7 @@ const Booking = () => {
                 </div>
               ))}
           </div>
-          {/* Aquí está el cambio: se usa el slotIndex para mostrar las horas del día seleccionado */}
+
           <div className="flex items-center gap-3 w-full overflow-x-scroll mt-4">
             {coachSlots.length &&
               coachSlots[slotIndex] &&
@@ -165,7 +220,10 @@ const Booking = () => {
                 </p>
               ))}
           </div>
-          <button className="bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6">
+          <button
+            onClick={bookSession}
+            className="bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6"
+          >
             Book Session
           </button>
         </div>

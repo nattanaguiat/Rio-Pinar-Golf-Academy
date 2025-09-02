@@ -3,6 +3,8 @@ import validator from "validator";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { v2 as cloudinary } from "cloudinary";
+import Coach from "../models/coach.model.js";
+import Booking from "../models/booking.model.js";
 
 export const signUp = async (req, res) => {
   try {
@@ -106,6 +108,54 @@ export const updateProfile = async (req, res) => {
     }
 
     res.json({ success: true, message: "Profile Updated" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export const bookSession = async (req, res) => {
+  try {
+    const { userId, coachId, slotDate, slotTime } = req.body;
+
+    console.log(coachId)
+
+    const coachData = await Coach.findById(coachId).select("-password");
+
+    let slots_booked = coachData.slots_booked;
+
+    if (slots_booked[slotDate]) {
+      if (slots_booked[slotDate].includes(slotTime)) {
+        return res.json({ succes: false, message: "Slot not available" });
+      } else {
+        slots_booked[slotDate].push(slotTime);
+      }
+    } else {
+      slots_booked[slotDate] = [];
+      slots_booked[slotDate].push(slotTime);
+    }
+
+    const userData = await User.findById(userId).select("-password");
+
+    delete coachData.slots_booked;
+
+    const bookingData = {
+      userId,
+      coachId,
+      userData,
+      coachData,
+      amount: coachData.fees,
+      slotTime,
+      slotDate,
+      date: Date.now(),
+    };
+
+    const newBooking = new Booking(bookingData);
+    await newBooking.save();
+
+    await Coach.findByIdAndUpdate(coachId, { slots_booked });
+
+    res.json({ success: true, message: "Booking Created" });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });
