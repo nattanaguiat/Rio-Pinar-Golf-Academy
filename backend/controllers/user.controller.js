@@ -33,9 +33,7 @@ export const signUp = async (req, res) => {
     const newUser = new User(userData);
     const user = await newUser.save();
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "7h",
-    });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
     res.json({ success: true, token });
   } catch (error) {
@@ -57,9 +55,7 @@ export const login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (isMatch) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: "7h",
-      });
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
       res.json({ success: true, token });
     } else {
       res.json({ success: false, message: "Invalid credentials" });
@@ -118,7 +114,7 @@ export const bookSession = async (req, res) => {
   try {
     const { userId, coachId, slotDate, slotTime } = req.body;
 
-    console.log(coachId)
+    console.log(coachId);
 
     const coachData = await Coach.findById(coachId).select("-password");
 
@@ -156,6 +152,50 @@ export const bookSession = async (req, res) => {
     await Coach.findByIdAndUpdate(coachId, { slots_booked });
 
     res.json({ success: true, message: "Booking Created" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export const getAllBookings = async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    const bookings = await Booking.find({ userId });
+
+    res.json({ success: true, bookings });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export const cancelBooking = async (req, res) => {
+  try {
+    const { userId, bookingId } = req.body;
+
+    const bookingData = await Booking.findById(bookingId);
+
+    if (bookingData.userId !== userId) {
+      return res.json({ success: false, message: "Unathorized action" });
+    }
+
+    await Booking.findByIdAndUpdate(bookingId, { cancelled: true });
+
+    const { coachId, slotDate, slotTime } = bookingData;
+
+    const coachData = await Coach.findById(coachId);
+
+    let slots_booked = coachData.slots_booked;
+
+    slots_booked[slotDate] = slots_booked[slotDate].filter(
+      (e) => e !== slotTime
+    );
+
+    await Coach.findByIdAndUpdate(coachId, { slots_booked });
+
+    res.json({ success: true, message: "Booking Cancelled" });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });
