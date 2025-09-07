@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import { v2 as cloudinary } from "cloudinary";
 import Coach from "../models/coach.model.js";
 import Booking from "../models/booking.model.js";
+import razorpay from "razorpay";
 
 export const signUp = async (req, res) => {
   try {
@@ -196,6 +197,57 @@ export const cancelBooking = async (req, res) => {
     await Coach.findByIdAndUpdate(coachId, { slots_booked });
 
     res.json({ success: true, message: "Booking Cancelled" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// const razorpayInstance = new razorpay({
+//   key_id: process.env.RAZORPAY_KEY_ID,
+//   key_secret: process.env.RAZORPAY_KEY_SECRET,
+// });
+
+// export const paymentRazorpay = async (req, res) => {
+//   try {
+//     const { bookingId } = req.body;
+
+//     const bookingData = await Booking.findById(bookingId);
+
+//     if (!bookingData || bookingData.cancelled) {
+//       return res.json({
+//         success: false,
+//         message: "Booking Cancelled or  not found",
+//       });
+//     }
+
+//     const options = {
+//       amount: bookingData.amount * 100,
+//       currency: process.env.CURRENCY,
+//       receipt: bookingId,
+//     };
+
+//     const order = await razorpayInstance.orders.create(options);
+
+//     res.json({ success: true, order });
+//   } catch (error) {
+//     console.log(error);
+//     res.json({ success: false, message: error.message });
+//   }
+// };
+
+export const verifyRazorpay = async (req, res) => {
+  try {
+    const { razorpay_order_id } = req.body;
+    const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id);
+
+    console.log(orderInfo);
+    if (orderInfo.status === "paid") {
+      await Booking.findByIdAndUpdate(orderInfo.receipt, { payment: true });
+      res.json({ success: true, message: "Payment successfully" });
+    } else {
+      res.json({ success: false, message: "Payment failed" });
+    }
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });

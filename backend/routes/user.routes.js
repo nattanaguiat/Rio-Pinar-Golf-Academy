@@ -7,6 +7,8 @@ import {
   bookSession,
   getAllBookings,
   cancelBooking,
+  // paymentRazorpay,
+  // verifyRazorpay,
 } from "../controllers/user.controller.js";
 import authUser from "../middlewares/authUser.js";
 import upload from "../middlewares/multer.js";
@@ -25,5 +27,7 @@ userRouter.post(
 userRouter.post("/book-session", authUser, bookSession);
 userRouter.get("/bookings", authUser, getAllBookings);
 userRouter.post("/cancel-booking", authUser, cancelBooking);
+// userRouter.post("/payment-razorpay", authUser, paymentRazorpay);
+// userRouter.post("/verifyRazorpay", authUser, verifyRazorpay);
 
 export default userRouter;

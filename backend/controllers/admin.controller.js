@@ -1,10 +1,11 @@
-import validator from "validator";
+// import validator from "validator";
 import bcrypt from "bcryptjs";
 import { v2 as cloudinary } from "cloudinary";
 import Coach from "../models/coach.model.js";
 import jwt from "jsonwebtoken";
+import Booking from "../models/booking.model.js";
 
-const addCoach = async (req, res) => {
+export const addCoach = async (req, res) => {
   try {
     const { name, email, password, subtitle, about, fees } = req.body;
     const imageFile = req.file;
@@ -55,16 +56,14 @@ const addCoach = async (req, res) => {
   }
 };
 
-const loginAdmin = async (req, res) => {
+export const loginAdmin = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (
       email === process.env.ADMIN_EMAIL &&
       password === process.env.ADMIN_PASSWORD
     ) {
-      const token = jwt.sign({ email, password }, process.env.JWT_SECRET, {
-        expiresIn: "7h",
-      });
+      const token = jwt.sign({ email, password }, process.env.JWT_SECRET);
       res.json({ success: true, token });
     } else {
       res.json({ success: false, message: "Invalid credentials" });
@@ -75,7 +74,7 @@ const loginAdmin = async (req, res) => {
   }
 };
 
-const allCoaches = async (req, res) => {
+export const allCoaches = async (req, res) => {
   try {
     const coaches = await Coach.find({}).select("-password");
     res.json({ success: true, coaches });
@@ -85,4 +84,40 @@ const allCoaches = async (req, res) => {
   }
 };
 
-export { addCoach, loginAdmin, allCoaches };
+export const bookingsAdmin = async (req, res) => {
+  try {
+    const bookings = await Booking.find({});
+
+    res.json({ success: true, bookings });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, messaage: error.messaage });
+  }
+};
+
+export const bookingCancelled = async (req, res) => {
+  try {
+    const { bookingId } = req.body;
+
+    const bookingData = await Booking.findById(bookingId);
+
+    await Booking.findByIdAndUpdate(bookingId, { cancelled: true });
+
+    const { coachId, slotDate, slotTime } = bookingData;
+
+    const coachData = await Coach.findById(coachId);
+
+    let slots_booked = coachData.slots_booked;
+
+    slots_booked[slotDate] = slots_booked[slotDate].filter(
+      (e) => e !== slotTime
+    );
+
+    await Coach.findByIdAndUpdate(coachId, { slots_booked });
+
+    res.json({ success: true, message: "Booking Cancelled" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};

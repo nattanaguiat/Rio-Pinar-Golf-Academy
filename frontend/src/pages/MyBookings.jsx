@@ -2,6 +2,7 @@ import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const MyBookings = () => {
   const { backendUrl, token, getCoachesData } = useContext(AppContext);
@@ -22,12 +23,16 @@ const MyBookings = () => {
     "Dic",
   ];
 
+  
+
   const slotDateFormat = (slotDate) => {
     const dateArray = slotDate.split("_");
     return (
       dateArray[0] + " " + months[Number(dateArray[1]) - 1] + " " + dateArray[2]
     );
   };
+
+  const navigate = useNavigate();
 
   const getUserBookings = async () => {
     try {
@@ -55,7 +60,7 @@ const MyBookings = () => {
       if (data.success) {
         toast.success(data.message);
         getUserBookings();
-        getCoachesData()
+        getCoachesData();
       } else {
         toast.error(data.message);
       }
@@ -64,6 +69,52 @@ const MyBookings = () => {
       toast.error(error.message);
     }
   };
+
+  // const initPay = (order) => {
+  //   const options = {
+  //     key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+  //     amount: order.amount,
+  //     currency: order.currency,
+  //     name: "Appointment Payment",
+  //     description: "Appointmnet Payment",
+  //     order_id: order.id,
+  //     receipt: order.receipt,
+  //     handler: async (response) => {
+  //       console.log(response);
+  //       try {
+  //         const { data } = await axios.post(
+  //           backendUrl + "/api/user/verifyRazorpay",
+  //           response,
+  //           { headers: { token } }
+  //         );
+
+  //         if (data.success) {
+  //           getUserBookings();
+  //           navigate("/my-bookings");
+  //         }
+  //       } catch (error) {
+  //         console.log(error);
+  //         toast.error(error.message);
+  //       }
+  //     },
+  //   };
+  //   const rzp = new window.Razorpay(options);
+  //   rzp.open();
+  // };
+
+  // const bookingRazorpay = async (bookingId) => {
+  //   try {
+  //     const { data } = await axios.post(
+  //       backendUrl + "/api/user/payment-razorpay",
+  //       { bookingId },
+  //       { headers: { token } }
+  //     );
+
+  //     if (data.succes) {
+  //       initPay(data.order);
+  //     }
+  //   } catch (error) {}
+  // };
 
   useEffect(() => {
     if (token) {
@@ -104,8 +155,16 @@ const MyBookings = () => {
             </div>
             <div></div>
             <div className="flex flex-col gap-2 justify-end">
-              {!booking.cancelled && (
-                <button className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-primary hover:text-white transition-all duration-300">
+              {/* {!booking.cancelled && booking.payment && (
+                <button className="w-48 py-2 border rounded text-stone-500 bg-indigo-50">
+                  Paid
+                </button>
+              )} */}
+              {!booking.cancelled && /**Implement !booking.payment */ (
+                <button
+                  onClick={() => bookingRazorpay(booking._id)}
+                  className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-primary hover:text-white transition-all duration-300"
+                >
                   Pay Online
                 </button>
               )}
