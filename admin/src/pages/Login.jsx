@@ -3,16 +3,17 @@ import { assets } from "../assets/assets";
 import { AdminContext } from "../context/AdminContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { CoachContext } from "../context/CoachContext";
 
 const Login = () => {
   const [state, setState] = useState("Admin");
-  const [email, setEmail] = useState("Admin");
-  const [password, setPassword] = useState("Admin");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const { setAToken, backendUrl } = useContext(AdminContext);
+  const { setCToken } = useContext(CoachContext);
 
   const handleSubmit = async (e) => {
-    console.log("🔵 handleSubmit ejecutado"); 
     e.preventDefault();
 
     try {
@@ -25,9 +26,21 @@ const Login = () => {
           localStorage.setItem("aToken", data.token);
           setAToken(data.token);
         } else {
-            toast.error(data.message)
+          toast.error(data.message);
         }
       } else {
+        const { data } = await axios.post(backendUrl + "/api/coaches/login", {
+          email,
+          password,
+        });
+        if (data.success) {
+          localStorage.setItem("cToken", data.token);
+          console.log(data.token);
+
+          setCToken(data.token);
+        } else {
+          toast.error(data.message);
+        }
       }
     } catch (error) {}
   };
@@ -58,7 +71,10 @@ const Login = () => {
             required
           />
         </div>
-        <button type='submit' className="bg-primary text-white w-full py-2 rounded-md text-base cursor-pointer">
+        <button
+          type="submit"
+          className="bg-primary text-white w-full py-2 rounded-md text-base cursor-pointer"
+        >
           Login
         </button>
         {state === "Admin" ? (

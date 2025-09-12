@@ -5,7 +5,8 @@ import { AppContext } from "../../context/AppContext";
 import { assets } from "../../assets/assets";
 
 const AllSessions = () => {
-  const { aToken, bookings, getAllBookings, cancelBooking } = useContext(AdminContext);
+  const { aToken, bookings, getAllBookings, cancelBooking } =
+    useContext(AdminContext);
   const { calculateAge, slotDateFormat, currency } = useContext(AppContext);
 
   useEffect(() => {
@@ -61,8 +62,11 @@ const AllSessions = () => {
             </p>
             {booking.cancelled ? (
               <p className="text-red-400 text-sm font-md">Cancelled</p>
+            ) : booking.isComplete ? (
+              <p className="text-green-500 text-sm font-md">Completed</p>
             ) : (
-              <img onClick={()=> cancelBooking(booking._id)}
+              <img
+                onClick={() => cancelBooking(booking._id)}
                 className="w-10 cursor-pointer"
                 src={assets.cancel_icon}
                 alt=""

@@ -2,9 +2,11 @@ import React, { useContext } from "react";
 import { assets } from "../assets/assets";
 import { AdminContext } from "../context/AdminContext";
 import { useNavigate } from "react-router-dom";
+import { CoachContext } from "../context/CoachContext";
 
 const Navbar = () => {
   const { aToken, setAToken } = useContext(AdminContext);
+  const {cToken, setCToken} = useContext(CoachContext)
 
   const navigate = useNavigate();
 
@@ -12,6 +14,8 @@ const Navbar = () => {
     navigate('/')
     aToken && setAToken("");
     aToken && localStorage.removeItem("aToken");
+    cToken && setCToken('')
+    cToken && localStorage.removeItem('cToken')
   };
   return (
     <div className="flex justify-between items-center px-4 sm:px-10 py-3 border-b bg-white">

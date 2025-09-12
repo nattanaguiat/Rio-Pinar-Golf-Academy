@@ -4,6 +4,7 @@ import { v2 as cloudinary } from "cloudinary";
 import Coach from "../models/coach.model.js";
 import jwt from "jsonwebtoken";
 import Booking from "../models/booking.model.js";
+import User from "../models/user.model.js";
 
 export const addCoach = async (req, res) => {
   try {
@@ -116,6 +117,26 @@ export const bookingCancelled = async (req, res) => {
     await Coach.findByIdAndUpdate(coachId, { slots_booked });
 
     res.json({ success: true, message: "Booking Cancelled" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export const adminDashboard = async (req, res) => {
+  try {
+    const coaches = await Coach.find({});
+    const users = await User.find({});
+    const bookings = await Booking.find({});
+
+    const dashData = {
+      coaches: coaches.length,
+      bookings: bookings.length,
+      students: users.length,
+      latestBookings: bookings.reverse().slice(0, 5),
+    };
+
+    res.json({ success: true, dashData });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });

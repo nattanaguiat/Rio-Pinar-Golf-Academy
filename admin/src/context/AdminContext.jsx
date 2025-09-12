@@ -11,6 +11,7 @@ const AdminContextProvider = ({ children }) => {
 
   const [coaches, setCoaches] = useState([]);
   const [bookings, setBookings] = useState([]);
+  const [dashData, setDashData] = useState(false);
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -82,6 +83,23 @@ const AdminContextProvider = ({ children }) => {
     }
   };
 
+  const getDashData = async () => {
+    try {
+      const { data } = await axios.get(backendUrl + "/api/admin/dashboard", {
+        headers: { aToken },
+      });
+
+      if (data.success) {
+        setDashData(data.dashData);
+        console.log(data.dashData)
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <AdminContext.Provider
       value={{
@@ -94,7 +112,9 @@ const AdminContextProvider = ({ children }) => {
         bookings,
         setBookings,
         getAllBookings,
-        cancelBooking
+        cancelBooking,
+        dashData,
+        getDashData,
       }}
     >
       {children}

@@ -160,7 +160,7 @@ const MyBookings = () => {
                   Paid
                 </button>
               )} */}
-              {!booking.cancelled && /**Implement !booking.payment */ (
+              {!booking.cancelled && !booking.isComplete && /**Implement !booking.payment */ (
                 <button
                   onClick={() => bookingRazorpay(booking._id)}
                   className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-primary hover:text-white transition-all duration-300"
@@ -169,7 +169,7 @@ const MyBookings = () => {
                 </button>
               )}
 
-              {!booking.cancelled && (
+              {!booking.cancelled && !booking.isComplete &&  (
                 <button
                   onClick={() => cancelBooking(booking._id)}
                   className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300"
@@ -177,11 +177,12 @@ const MyBookings = () => {
                   Cancel Booking
                 </button>
               )}
-              {booking.cancelled && (
+              {booking.cancelled && !booking.isComplete &&  (
                 <button className="sm:min-w-48 py-2 border border-red-500 rounded text-red-500">
                   Booking Cancelled
                 </button>
               )}
+              {booking.isComplete && <button className="sm:min-w-48 border border-green-500 rounded text-green-500">Completed</button>}
             </div>
           </div>
         ))}
