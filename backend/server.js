@@ -2,9 +2,9 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/connectionDB.js";
-import adminRouter from "./routes/admin.route.js";
-import coachRouter from "./routes/coach.route.js";
-import userRouter from "./routes/user.route.js";
+import adminRouter from "./routes/admin.routes.js";
+import coachRouter from "./routes/coach.routes.js";
+import userRouter from "./routes/user.routes.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
