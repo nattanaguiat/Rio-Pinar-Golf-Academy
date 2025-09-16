@@ -23,9 +23,9 @@ app.use(cors());
 app.use(express.json());
 
 // --- Rutas API ---
-// app.use("/api/admin", adminRouter);
-// app.use("/api/coach", coachRouter);
-// app.use("/api/user", userRouter);
+app.use("/api/admin", adminRouter);
+app.use("/api/coach", coachRouter);
+app.use("/api/user", userRouter);
 
 // --- Servir frontend (client) ---
 const frontendPath = path.join(__dirname, "../frontend/dist");
