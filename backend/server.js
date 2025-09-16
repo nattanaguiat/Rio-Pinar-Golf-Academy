@@ -7,9 +7,9 @@ import { fileURLToPath } from "url";
 // Importa tus routers y configuraciones
 import connectCloudinay from "./config/cloudinary.js";
 import connectDB from "./config/connectionDB.js";
-import adminRouter from "./routes/admin.routes.js";
-import coachRouter from "./routes/coach.routes.js";
-import userRouter from "./routes/user.routes.js";
+// import adminRouter from "./routes/admin.routes.js";
+// import coachRouter from "./routes/coach.routes.js";
+// import userRouter from "./routes/user.routes.js";
 
 // Carga las variables de entorno
 dotenv.config();
@@ -31,9 +31,9 @@ app.use(express.json());
 app.use(cors());
 
 // Rutas de la API (Backend)
-app.use("/api/admin", adminRouter);
-app.use("/api/coaches", coachRouter);
-app.use("/api/user", userRouter);
+// app.use("/api/admin", adminRouter);
+// app.use("/api/coaches", coachRouter);
+// app.use("/api/user", userRouter);
 
 // --- SERVIR ARCHIVOS ESTÁTICOS DEL FRONTEND ---
 const frontendPath = path.join(__dirname, "../frontend/dist");
