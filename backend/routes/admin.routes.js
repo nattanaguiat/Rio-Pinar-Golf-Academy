@@ -12,11 +12,11 @@ import authAdmin from "../middlewares/authAdmin.js";
 
 const adminRouter = Router();
 
-adminRouter.post("/add-coach", authAdmin, upload.single("image"), addCoach);
-adminRouter.post("/login", loginAdmin);
-adminRouter.post("/all-coaches", authAdmin, allCoaches);
-adminRouter.get("/bookings", authAdmin, bookingsAdmin);
-adminRouter.post("/cancel-booking", authAdmin, bookingCancelled);
-adminRouter.get("/dashboard", authAdmin, adminDashboard);
+// adminRouter.post("/add-coach", authAdmin, upload.single("image"), addCoach);
+// adminRouter.post("/login", loginAdmin);
+// adminRouter.post("/all-coaches", authAdmin, allCoaches);
+// adminRouter.get("/bookings", authAdmin, bookingsAdmin);
+// adminRouter.post("/cancel-booking", authAdmin, bookingCancelled);
+// adminRouter.get("/dashboard", authAdmin, adminDashboard);
 
 export default adminRouter;
