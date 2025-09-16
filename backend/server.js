@@ -27,13 +27,22 @@ connectCloudinay();
 
 // Middlewares
 app.use(express.json());
-// CORS no es necesario aquí porque el frontend y admin se servirán desde el mismo dominio
 app.use(cors());
 
-// Rutas de la API (Backend)
+// --- RUTAS DE LA API (BACKEND) ---
+// Estas rutas deben estar ANTES de las rutas estáticas
 app.use("/api/admin", adminRouter);
 app.use("/api/coaches", coachRouter);
 app.use("/api/user", userRouter);
+
+// --- SERVIR ARCHIVOS ESTÁTICOS DEL ADMIN ---
+const adminPath = path.join(__dirname, "../admin/dist");
+app.use("/admin", express.static(adminPath));
+
+// Maneja las rutas del panel de admin (SPA)
+app.get("/admin/*", (req, res) => {
+  res.sendFile(path.resolve(adminPath, "index.html"));
+});
 
 // --- SERVIR ARCHIVOS ESTÁTICOS DEL FRONTEND ---
 const frontendPath = path.join(__dirname, "../frontend/dist");
@@ -42,15 +51,6 @@ app.use(express.static(frontendPath));
 // Ruta principal que sirve el frontend (SPA)
 app.get("/", (req, res) => {
   res.sendFile(path.resolve(frontendPath, "index.html"));
-});
-
-// --- SERVIR ARCHIVOS ESTÁTICOS DEL ADMIN ---
-// const adminPath = path.join(__dirname, "../admin/dist");
-// app.use("/admin", express.static(adminPath));
-
-// Maneja las rutas del panel de admin (SPA)
-app.get("/admin/*", (req, res) => {
-  res.sendFile(path.resolve(adminPath, "index.html"));
 });
 
 // Fallback para las rutas del frontend que no coinciden con las anteriores
