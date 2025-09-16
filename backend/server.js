@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/connectionDB.js";
 import adminRouter from "./routes/admin.routes.js";
+import coachRouter from "./routes/coach.routes.js";
 import userRouter from "./routes/user.routes.js";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -23,12 +24,8 @@ app.use(express.json());
 
 // --- Rutas API ---
 app.use("/api/admin", adminRouter);
+app.use("/api/coaches", coachRouter); // ¡Esta línea vuelve a ser importante!
 app.use("/api/user", userRouter);
-
-// **Ruta de coaches movida directamente al servidor**
-app.get("/api/coaches", (req, res) => {
-  res.send("Coach API is working! This message comes directly from server.js");
-});
 
 // --- Servir archivos estáticos del frontend y admin ---
 const frontendPath = path.join(__dirname, "../frontend/dist");

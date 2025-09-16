@@ -21,7 +21,7 @@ export const coachesList = async (req, res) => {
     const coaches = await Coach.find({}).select(["-password", "-email"]);
 
     res.json({ success: true, coaches });
-  } catch {
+  } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });
   }
