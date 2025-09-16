@@ -1,4 +1,4 @@
-import {Router} from 'express'
+import { Router } from 'express'
 import { bookingCancel, bookingComplete, bookingsCoach, coachDashboard, coachesList, coachProfile, loginCoach, updateCoachProfile } from '../controllers/coach.controller.js'
 import authCoach from '../middlewares/authCoach.js'
 
@@ -12,6 +12,5 @@ coachRouter.post('/cancel-booking', authCoach, bookingCancel)
 coachRouter.get('/dashboard', authCoach, coachDashboard)
 coachRouter.get('/profile', authCoach, coachProfile)
 coachRouter.post('/update-profile', authCoach, updateCoachProfile)
-
 
 export default coachRouter
