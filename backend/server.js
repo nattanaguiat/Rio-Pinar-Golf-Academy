@@ -36,12 +36,12 @@ const adminPath = path.join(__dirname, "../admin/dist");
 app.use("/admin", express.static(adminPath));
 
 // ✅ Fallback para Admin SPA
-app.get("/admin/:path(*)", (req, res) => {
+app.get("/admin/*", (req, res) => {
   res.sendFile(path.resolve(adminPath, "index.html"));
 });
 
 // ✅ Fallback general para frontend SPA
-app.get("/:path(*)", (req, res) => {
+app.get("*", (req, res) => {
   res.sendFile(path.resolve(frontendPath, "index.html"));
 });
 
