@@ -27,23 +27,12 @@ app.use("/api/admin", adminRouter);
 app.use("/api/coach", coachRouter);
 app.use("/api/user", userRouter);
 
-// --- Servir frontend (client) ---
+// --- Servir archivos estáticos del frontend y admin ---
 const frontendPath = path.join(__dirname, "../frontend/dist");
 app.use(express.static(frontendPath));
 
-// --- Servir admin panel ---
 const adminPath = path.join(__dirname, "../admin/dist");
 app.use("/admin", express.static(adminPath));
-
-// ✅ Fallback para Admin SPA
-app.get("/admin/:path(*)", (req, res) => {
-  res.sendFile(path.resolve(adminPath, "index.html"));
-});
-
-// ✅ Fallback general para frontend SPA
-app.get("/:path(*)", (req, res) => {
-  res.sendFile(path.resolve(frontendPath, "index.html"));
-});
 
 // --- Iniciar servidor ---
 app.listen(PORT, () => {
