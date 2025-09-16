@@ -41,7 +41,7 @@ app.get(/^\/admin(\/.*)?$/, (req, res) => {
 });
 
 // ✅ Fallback general para frontend SPA
-app.get("*", (req, res) => {
+app.get("/*", (req, res) => {
   res.sendFile(path.resolve(frontendPath, "index.html"));
 });
 
