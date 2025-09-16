@@ -8,8 +8,8 @@ import { fileURLToPath } from "url";
 import connectCloudinay from "./config/cloudinary.js";
 import connectDB from "./config/connectionDB.js";
 import adminRouter from "./routes/admin.routes.js";
-// import coachRouter from "./routes/coach.routes.js";
-// import userRouter from "./routes/user.routes.js";
+import coachRouter from "./routes/coach.routes.js";
+import userRouter from "./routes/user.routes.js";
 
 // Carga las variables de entorno
 dotenv.config();
@@ -32,8 +32,8 @@ app.use(cors());
 
 // Rutas de la API (Backend)
 app.use("/api/admin", adminRouter);
-// app.use("/api/coaches", coachRouter);
-// app.use("/api/user", userRouter);
+app.use("/api/coaches", coachRouter);
+app.use("/api/user", userRouter);
 
 // --- SERVIR ARCHIVOS ESTÁTICOS DEL FRONTEND ---
 const frontendPath = path.join(__dirname, "../frontend/dist");
@@ -45,8 +45,8 @@ app.get("/", (req, res) => {
 });
 
 // --- SERVIR ARCHIVOS ESTÁTICOS DEL ADMIN ---
-const adminPath = path.join(__dirname, "../admin/dist");
-app.use("/admin", express.static(adminPath));
+// const adminPath = path.join(__dirname, "../admin/dist");
+// app.use("/admin", express.static(adminPath));
 
 // Maneja las rutas del panel de admin (SPA)
 app.get("/admin/*", (req, res) => {
