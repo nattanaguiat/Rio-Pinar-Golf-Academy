@@ -35,15 +35,16 @@ app.use(express.static(frontendPath));
 const adminPath = path.join(__dirname, "../admin/dist");
 app.use("/admin", express.static(adminPath));
 
-// ✅ FIX: Express 5 compatible fallback para Admin SPA
-app.get(/^\/admin(\/.*)?$/, (req, res) => {
+// ✅ FIX: fallback para Admin SPA (Express 5 compatible)
+app.get("/admin/*", (req, res) => {
   res.sendFile(path.resolve(adminPath, "index.html"));
 });
 
-// ✅ Fallback general para frontend SPA
+// ✅ FIX: fallback general para frontend SPA
 app.get("/*", (req, res) => {
   res.sendFile(path.resolve(frontendPath, "index.html"));
 });
+
 
 // --- Iniciar servidor ---
 app.listen(PORT, () => {
