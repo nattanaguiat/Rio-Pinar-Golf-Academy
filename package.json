@@ -1,0 +1,21 @@
+{
+  "name": "rio-pinar-golf-academy",
+  "version": "1.0.0",
+  "description": "Full MERN + Admin app for Rio Pinar Golf Academy",
+  "main": "backend/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node backend/server.js",
+    "install-all": "npm i && cd backend && npm i && cd ../frontend && npm i && cd ../admin && npm i",
+    "build": "cd frontend && npm run build && cd ../admin && npm run build"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongoose": "^8.4.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
