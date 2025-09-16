@@ -7,7 +7,7 @@ import { fileURLToPath } from "url";
 // Importa tus routers y configuraciones
 import connectCloudinay from "./config/cloudinary.js";
 import connectDB from "./config/connectionDB.js";
-// import adminRouter from "./routes/admin.routes.js";
+import adminRouter from "./routes/admin.routes.js";
 // import coachRouter from "./routes/coach.routes.js";
 // import userRouter from "./routes/user.routes.js";
 
@@ -31,7 +31,7 @@ app.use(express.json());
 app.use(cors());
 
 // Rutas de la API (Backend)
-// app.use("/api/admin", adminRouter);
+app.use("/api/admin", adminRouter);
 // app.use("/api/coaches", coachRouter);
 // app.use("/api/user", userRouter);
 
