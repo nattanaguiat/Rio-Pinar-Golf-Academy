@@ -21,7 +21,6 @@ const Coaches = () => {
     );
   }
 
-
   return (
     <div className="px-6 py-10">
       <h1 className="text-3xl font-bold text-center mb-8">OUR COACHES</h1>
@@ -29,7 +28,6 @@ const Coaches = () => {
         {coaches.map((coach) => (
           <Link key={coach._id} to={`/booking/${coach._id}`}>
             <div
-              
               className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl 
                        transform hover:scale-105 transition duration-300 cursor-pointer"
             >

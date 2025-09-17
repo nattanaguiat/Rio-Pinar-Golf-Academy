@@ -7,20 +7,20 @@ export const AppContext = createContext();
 
 const AppContextProvider = ({ children }) => {
   const currencySymbol = "$";
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const backendUrl = ""; // Ya no necesitas esta variable
 
   const [coaches, setCoaches] = useState([]);
   const [token, setToken] = useState(
     localStorage.getItem("token") ? localStorage.getItem("token") : false
   );
-
   const [userData, setUserData] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // <-- Nuevo estado de carga
 
   const getCoachesData = async () => {
     try {
-      setLoading(true);
-      const { data } = await axios.get(backendUrl + "/api/coaches/list");
+      setLoading(true); // <-- Iniciar la carga
+      // Usa una ruta relativa. El navegador ya sabe que está en riopinar-golfacademy.onrender.com
+      const { data } = await axios.get("/api/coaches/list");
       if (data.success) {
         setCoaches(data.coaches);
       } else {
@@ -30,7 +30,7 @@ const AppContextProvider = ({ children }) => {
       console.log(error);
       toast.error(error.message);
     } finally {
-      setLoading(false);
+      setLoading(false); // <-- Detener la carga (siempre)
     }
   };
 
@@ -75,7 +75,6 @@ const AppContextProvider = ({ children }) => {
         setUserData,
         loadUserProfileData,
         loading,
-        setLoading,
       }}
     >
       {children}
