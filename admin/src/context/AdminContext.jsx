@@ -17,8 +17,7 @@ const AdminContextProvider = ({ children }) => {
 
   const getAllCoaches = async () => {
     try {
-      const { data } = await axios.post(
-        backendUrl + "/api/admin/all-coaches",
+      const { data } = await axios.post("/api/admin/all-coaches",
         {},
         { headers: { aToken } }
       );
@@ -50,7 +49,7 @@ const AdminContextProvider = ({ children }) => {
 
   const getAllBookings = async () => {
     try {
-      const { data } = await axios.get(backendUrl + "/api/admin/bookings", {
+      const { data } = await axios.get("/api/admin/bookings", {
         headers: { aToken },
       });
       if (data.success) {
@@ -66,8 +65,7 @@ const AdminContextProvider = ({ children }) => {
 
   const cancelBooking = async (bookingId) => {
     try {
-      const { data } = await axios.post(
-        backendUrl + "/api/admin/cancel-booking",
+      const { data } = await axios.post("/api/admin/cancel-booking",
         { bookingId },
         { headers: { aToken } }
       );
@@ -85,7 +83,7 @@ const AdminContextProvider = ({ children }) => {
 
   const getDashData = async () => {
     try {
-      const { data } = await axios.get(backendUrl + "/api/admin/dashboard", {
+      const { data } = await axios.get("/api/admin/dashboard", {
         headers: { aToken },
       });
 

@@ -17,7 +17,7 @@ const CoachContextProvider = ({ children }) => {
 
   const getBookings = async () => {
     try {
-      const { data } = await axios.get(backendUrl + "/api/coaches/bookings", {
+      const { data } = await axios.get("/api/coaches/bookings", {
         headers: { cToken },
       });
       if (data.success) {
@@ -35,7 +35,7 @@ const CoachContextProvider = ({ children }) => {
   const completeBooking = async (bookingId) => {
     try {
       const { data } = await axios.post(
-        backendUrl + "/api/coaches/complete-booking",
+        "/api/coaches/complete-booking",
         { bookingId },
         { headers: { cToken } }
       );
@@ -54,7 +54,7 @@ const CoachContextProvider = ({ children }) => {
   const cancelBooking = async (bookingId) => {
     try {
       const { data } = await axios.post(
-        backendUrl + "/api/coaches/cancel-booking",
+        "/api/coaches/cancel-booking",
         { bookingId },
         { headers: { cToken } }
       );
@@ -73,7 +73,7 @@ const CoachContextProvider = ({ children }) => {
 
   const getDashData = async () => {
     try {
-      const { data } = await axios.get(backendUrl + "/api/coaches/dashboard", {
+      const { data } = await axios.get("/api/coaches/dashboard", {
         headers: { cToken },
       });
 
@@ -91,7 +91,7 @@ const CoachContextProvider = ({ children }) => {
 
   const getProfileData = async () => {
     try {
-      const { data } = await axios.get(backendUrl + "/api/coaches/profile", {
+      const { data } = await axios.get("/api/coaches/profile", {
         headers: { cToken },
       });
       if (data.success) {

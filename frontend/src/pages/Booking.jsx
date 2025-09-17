@@ -107,8 +107,7 @@ const Booking = () => {
 
       const slotDate = `${day}_${month}_${year}`;
 
-      const { data } = await axios.post(
-        backendUrl + "/api/user/book-session",
+      const { data } = await axios.post("/api/user/book-session",
         {
           coachId,
           slotDate,

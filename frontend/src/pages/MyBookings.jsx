@@ -36,7 +36,7 @@ const MyBookings = () => {
 
   const getUserBookings = async () => {
     try {
-      const { data } = await axios.get(backendUrl + "/api/user/bookings", {
+      const { data } = await axios.get("/api/user/bookings", {
         headers: { token },
       });
 
@@ -51,8 +51,7 @@ const MyBookings = () => {
 
   const cancelBooking = async (bookingId) => {
     try {
-      const { data } = await axios.post(
-        backendUrl + "/api/user/cancel-booking",
+      const { data } = await axios.post("/api/user/cancel-booking",
         { bookingId },
         { headers: { token } }
       );

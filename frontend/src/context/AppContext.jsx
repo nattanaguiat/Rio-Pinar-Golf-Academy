@@ -14,12 +14,11 @@ const AppContextProvider = ({ children }) => {
     localStorage.getItem("token") ? localStorage.getItem("token") : false
   );
   const [userData, setUserData] = useState(false);
-  const [loading, setLoading] = useState(true); // <-- Nuevo estado de carga
+  const [loading, setLoading] = useState(true);
 
   const getCoachesData = async () => {
     try {
-      setLoading(true); // <-- Iniciar la carga
-      // Usa una ruta relativa. El navegador ya sabe que está en riopinar-golfacademy.onrender.com
+      setLoading(true);
       const { data } = await axios.get("/api/coaches/list");
       if (data.success) {
         setCoaches(data.coaches);
@@ -30,13 +29,13 @@ const AppContextProvider = ({ children }) => {
       console.log(error);
       toast.error(error.message);
     } finally {
-      setLoading(false); // <-- Detener la carga (siempre)
+      setLoading(false); 
     }
   };
 
   const loadUserProfileData = async () => {
     try {
-      const { data } = await axios.get(backendUrl + "/api/user/profile", {
+      const { data } = await axios.get("/api/user/profile", {
         headers: { token },
       });
       if (data.success) {
