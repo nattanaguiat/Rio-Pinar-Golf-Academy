@@ -24,7 +24,7 @@ app.use(express.json());
 
 // --- Rutas API ---
 app.use("/api/admin", adminRouter);
-app.use("/api/coaches", coachRouter); // ¡Esta línea vuelve a ser importante!
+app.use("/api/coaches", coachRouter);
 app.use("/api/user", userRouter);
 
 // --- Servir archivos estáticos del frontend y admin ---

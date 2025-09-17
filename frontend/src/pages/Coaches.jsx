@@ -3,7 +3,24 @@ import { AppContext } from "../context/AppContext";
 import { Link } from "react-router-dom";
 
 const Coaches = () => {
-  const { coaches } = useContext(AppContext);
+  const { coaches, loading } = useContext(AppContext);
+
+  if (loading) {
+    return (
+      <div className="text-center py-20">
+        <h1 className="text-2xl font-bold">Loading coaches...</h1>
+      </div>
+    );
+  }
+
+  if (coaches.length === 0) {
+    return (
+      <div className="text-center py-20">
+        <h1 className="text-2xl font-bold">No coaches found.</h1>
+      </div>
+    );
+  }
+
 
   return (
     <div className="px-6 py-10">

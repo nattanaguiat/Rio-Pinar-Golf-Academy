@@ -15,9 +15,11 @@ const AppContextProvider = ({ children }) => {
   );
 
   const [userData, setUserData] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const getCoachesData = async () => {
     try {
+      setLoading(true);
       const { data } = await axios.get(backendUrl + "/api/coaches/list");
       if (data.success) {
         setCoaches(data.coaches);
@@ -27,6 +29,8 @@ const AppContextProvider = ({ children }) => {
     } catch (error) {
       console.log(error);
       toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -61,7 +65,8 @@ const AppContextProvider = ({ children }) => {
   return (
     <AppContext.Provider
       value={{
-        coaches, getCoachesData,
+        coaches,
+        getCoachesData,
         backendUrl,
         currencySymbol,
         token,
@@ -69,6 +74,8 @@ const AppContextProvider = ({ children }) => {
         userData,
         setUserData,
         loadUserProfileData,
+        loading,
+        setLoading,
       }}
     >
       {children}
