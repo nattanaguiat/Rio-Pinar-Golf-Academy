@@ -11,7 +11,7 @@ import Navbar from "./components/Navbar";
 import RioJuniorGA from "./pages/JuniorAcademy";
 import JuniorAcademy from "./pages/JuniorAcademy";
 import Footer from "./components/Footer";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   return (
